@@ -9,10 +9,11 @@
     "sourceMap": true,
     "allowJs": true,
     "lib": ["ESNext", "DOM"],
-    "target": "ESNext",
+    "target": "es5",
     "moduleResolution": "node",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": false
+    "noUnusedLocals": false,
+    "outDir": "out"
   }
 }

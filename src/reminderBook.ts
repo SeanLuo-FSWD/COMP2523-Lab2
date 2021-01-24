@@ -3,31 +3,33 @@ import {Reminder} from "./reminder";
 
 interface ItemObj {
     "body" : string,
-    "done" : boolean
+    "done" : boolean,
+    "r_id" : number
 }
 
 class ReminderBook {
     noteList: Reminder[] = [];
-    constructor() {
-        this.addNote('r1','t1');
-        this.addNote('r2','t1');
-        this.addNote('r3','t2');
-        this.addNote('r4','r1');
-    }
+        // [
+        //     Reminder { body: 'r1', tag: 'T1', done: false, r_id: 1 },
+        //     Reminder { body: 'r2', tag: 'T1', done: false, r_id: 2 },
+        //     Reminder { body: 'r3', tag: 'T2', done: false, r_id: 3 },
+        //     Reminder { body: 'r4', tag: 'R1', done: false, r_id: 4 }
+        // ]
 
+    itemList: ItemObj[] = [];
 
+    // constructor() {
+    //     this.addNote('buy large milk','grocery');
+    //     this.addNote('buy oranges','grocery');
+    //     this.addNote('learn typescript','coding');
+    // }
 
     private _listObj()  {
         let listObj: { [key: string]: ItemObj[] } = {};
 
         this.noteList.forEach(ele => {
-            let tag: string = ele._tag;
-            let body: string = ele._body;
-            let done: boolean = ele._done;
-            let itemObj: ItemObj = {"body": "none", "done": false}
-            itemObj['body'] = body;
-            itemObj['done'] = done;
-
+            let tag: string = ele.tag;
+            let itemObj: ItemObj = {"body": ele.body, "done": ele.done, "r_id": ele.r_id}
 
             if(!listObj[tag]){ // If a new tag, start a new list
                 listObj[tag] = [];
@@ -40,42 +42,51 @@ class ReminderBook {
         return listObj;
     }
 
+    // case 1
     listNotes(){
-        Object.entries(this._listObj()).forEach(
-            ([tag, itemObj]) => {
-                console.log(tag)
-                itemObj.forEach((item)=> {
-                    if(!item.done) {
-                        console.log(`⭕️ ${item.body}`);
-                    }
-                    else {
-                        console.log(`🔴 ${item.body} [complete]`);
-                    }
-                })
-            });
+        if (this.noteList.length == 0) {
+            console.log('\n You have no reminders \n');
+        }
+        else {
+            Object.entries(this._listObj()).forEach(
+                ([tag, itemObj]) => {
+                    console.log(`\n[Tag]: ${tag} \n`)
+                    itemObj.forEach((item)=> {
+                        if(!item.done) {
+                            console.log(`⭕️ ${item.body}`);
+                        }
+                        else {
+                            console.log(`🔴 ${item.body} [complete]`);
+                        }
+                    })
+                });
+                console.log('');
+        }
+
     }
 
+    // case 2
     searchNote(term: string) {
         
         let listObj = this._listObj();
         let tagFound = false;
         
-        if (!tagFound) { // search exact matching tags
-            Object.entries(listObj).forEach(
-                ([tag, itemObj]) => {                
-                    if (tag === term.toUpperCase()) {
-                        tagFound = true;
-                        itemObj.forEach((item)=> {
-                            if(!item.done) {
-                                console.log(`⭕️ ${item.body}`);
-                            }
-                            else {
-                                console.log(`🔴 ${item.body} [complete]`);
-                            }
-                        })
-                    }
-                });
-        };
+         // search exact matching tags
+        Object.entries(listObj).forEach(
+            ([tag, itemObj]) => {                
+                if (tag === term.toUpperCase()) {
+                    tagFound = true;
+                    itemObj.forEach((item)=> {
+                        if(!item.done) {
+                            console.log(`⭕️ ${item.body}`);
+                        }
+                        else {
+                            console.log(`🔴 ${item.body} [complete]`);
+                        }
+                    })
+                }
+            });
+    
 
         if (!tagFound) { // if no tag found above, proceed to search body value
             Object.values(listObj).forEach( itemObj => { // looping tag level
@@ -83,26 +94,60 @@ class ReminderBook {
                 itemObj.forEach( item => { // looping item-obj array
                     if (item.body.toUpperCase() === term.toUpperCase() || item.body.toUpperCase().includes(term.toUpperCase()) ) {
                         if(!item.done) {
-                            console.log(`⭕️ ${item.body}`);
+                            console.log(`⭕️ ${item.body}\n`);
                         }
                         else {
-                            console.log(`🔴 ${item.body} [complete]`);
+                            console.log(`🔴 ${item.body} [complete]\n`);
                         } 
                     }
                 })
-                // dir(listObj);
-                // dir(itemObj);
             });
-
-
         }
-
-
     }
 
+    // case 3
     addNote(body: string, tag: string) {
         this.noteList.push(new Reminder(body, tag))
     }
+
+    // display edit/toggle list
+    displayList(){
+        let counter: number = 1;
+        this.noteList.forEach(ele => {
+            let itemObj: ItemObj = {"body": ele.body, "done": ele.done, "r_id": ele.r_id}
+            this.itemList.push(itemObj);
+            console.log(`[${counter}] ${ele.body}`);
+            counter++;
+        });
+    }
+
+    // case 4
+    editReminder(editChoice: number, newDescription: string) {
+        let r_id = this.itemList[editChoice - 1].r_id;
+        let r_index: number;
+
+        this.noteList.forEach(reminder => {
+            if (reminder.r_id === r_id) {
+                r_index = this.noteList.indexOf(reminder);
+                this.noteList[r_index].body = newDescription;
+            }
+        })
+    }
+
+    // case 5 
+    toggleComplete(chosen_index: number) {
+        let r_id = this.itemList[chosen_index - 1].r_id;
+        let r_index: number;
+
+        this.noteList.forEach( reminder => {
+            if (reminder.r_id === r_id) {
+                r_index = this.noteList.indexOf(reminder);
+                this.noteList[r_index].done = !reminder.done;
+            }
+        })
+        console.log('');
+    }
+
 };
 
 export { ReminderBook };
