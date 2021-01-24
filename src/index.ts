@@ -23,6 +23,20 @@ if (input==="") {
     console.log(menu);   
 }
 
+function getInput(inputType:string) {
+    let searchTerm:string = "";
+    let confirm:string = "";
+
+    while (confirm != "y") {
+        searchTerm = question(`Enter a ${inputType} here: `);
+        confirm = question(`You entered ${inputType}: '${searchTerm}', is it correct? y/n: `);
+        if (confirm != "y"){
+            console.log('Please try typing it again');
+        }
+    }
+    return searchTerm;
+}
+
 while (choice != 6) {
     input = question("Choose a [Number] followed by [Enter]: ");
     
@@ -32,35 +46,37 @@ while (choice != 6) {
         console.log(menu);   
     }
     else if ([1,2,3,4,5].includes(choice)) {
-        let reminderBody:string = "";
-        let reminderTag:string = "";
+        let term: string = "";
+
+
+        let searchTerm: string = "";
 
         let bodyConfirm:string = "n";
         let tagConfirm:string = "n";
+        let searchConfirm: string = "";
+
 
         switch (choice) {
             case 1: // g
                 console.log("Show all reminders");
                 rBook.listNotes();
                 break;
-            case 2: 
+            case 2: // g
                 console.log("Search reminders");
+                term = getInput('keyword');
+
+                rBook.searchNote(term);
                 break;
             case 3: // g
                 console.log("Add reminder");
+                let reminderBody:string = "";
+                let reminderTag:string = "";
+
                 while (bodyConfirm != "y") {
-                    reminderBody = question("Enter a reminder here: ");
-                    bodyConfirm = question(`You entered reminder: '${reminderBody}', is it correct? y/n: `);
-                    if (bodyConfirm != "y"){
-                        console.log('Please try typing it again');
-                    }
+                    reminderBody = getInput('reminder');
                 }
                 while (tagConfirm != "y") {
-                    reminderTag = question("Enter a tag here: ");
-                    tagConfirm = question(`You entered tag: '${reminderTag}', is it correct? y/n: `);
-                    if (tagConfirm != "y"){
-                        console.log('Please try typing it again');
-                    }
+                    reminderTag = getInput('tag');
                 }
                 rBook.addNote(reminderBody,reminderTag);
                 console.log('Reminder added');
