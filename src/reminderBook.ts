@@ -9,12 +9,6 @@ interface ItemObj {
 
 class ReminderBook {
   noteList: Reminder[] = [];
-  // [
-  //     Reminder { body: 'r1', tag: 'T1', done: false, r_id: 1 },
-  //     Reminder { body: 'r2', tag: 'T1', done: false, r_id: 2 },
-  //     Reminder { body: 'r3', tag: 'T2', done: false, r_id: 3 },
-  //     Reminder { body: 'r4', tag: 'R1', done: false, r_id: 4 }
-  // ]
 
   itemList: ItemObj[] = [];
 

@@ -18,11 +18,6 @@ let term: string = "";
 
 let rBook = new ReminderBook();
 
-// let input:string = question("Hit [Enter] key to see main menu:");
-// if (input==="") {
-//     console.log(menu);
-// }
-
 function getInput(inputType: string) {
   let searchTerm: string = "";
   let confirm: string = "";
